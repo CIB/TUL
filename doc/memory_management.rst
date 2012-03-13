@@ -8,8 +8,8 @@ There are only two distinct datatypes that LWCL will ever allocate itself and re
 ================    ======   ========================================  ======================================================================
 Datatype            C-Type   Allocate With                             Deallocate With
 ================    ======   ========================================  ======================================================================
-String              char*    :c:func:`TUL_stringAlloc`               :c:func:`TUL_stringDealloc`
-Opaque Object       void*    Type-specific handler(``TUL_*_create``)  Type-specific handler(``TUL_*_destroy``)
+String              char*    :c:func:`TUL_stringAlloc`                 :c:func:`TUL_stringDealloc`
+Opaque Object       void*    Type-specific handler(``TUL_*_create``)   Type-specific handler(``TUL_*_destroy``)
 ================    ======   ========================================  ======================================================================
 
 .. _string-allocation:
