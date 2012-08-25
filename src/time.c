@@ -3,6 +3,8 @@
 
 #ifdef _WIN32
     #include <windows.h>
+#else
+    #include <time.h>
 #endif
 
 double TUL_seconds() {
@@ -24,9 +26,15 @@ double TUL_seconds() {
         rval /= frequency.QuadPart;
 
         return rval;
-    #endif
+    #else
+        // Create a struct we'll write the output to
+        struct timespec time;
 
-    // TODO: POSIX implementation
+        // Get the time
+        clock_gettime(CLOCK_REALTIME, &time);
+        double rval = time.tv_sec + ((double)time.tv_nsec) / (1000*1000*1000);
+        return rval;
+    #endif
 }
 
 void TUL_sleep(double seconds) {
