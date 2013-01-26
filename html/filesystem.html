@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Filesystem Library &mdash; TUL 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TUL 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="Threading" href="thread.html" />
+    <link rel="prev" title="Time" href="time.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="thread.html" title="Threading"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="time.html" title="Time"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TUL 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="filesystem-library">
+<h1>Filesystem Library<a class="headerlink" href="#filesystem-library" title="Permalink to this headline">¶</a></h1>
+<p>This module is responsible for providing additional functionality in regards to working with the native file system. It is largely inspired by the luafilesystem library.</p>
+<dl class="function">
+<dt id="TUL_getcwd">
+char* <tt class="descname">TUL_getcwd</tt><big>(</big><big>)</big><a class="headerlink" href="#TUL_getcwd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current working directory.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The current working directory(<em>cwd</em>) represents your point of reference in the file system. All relative paths will base off the <em>cwd</em>.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The returned string is heap allocated and must be manually deallocated, see <a class="reference internal" href="memory_management.html#string-allocation"><em>String Allocation</em></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_chdir">
+int <tt class="descname">TUL_chdir</tt><big>(</big>const char*<em>&nbsp;path</em><big>)</big><a class="headerlink" href="#TUL_chdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the current working directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_mkdir">
+int <tt class="descname">TUL_mkdir</tt><big>(</big>const char*<em>&nbsp;path</em><big>)</big><a class="headerlink" href="#TUL_mkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new directory at the given path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_rmdir">
+int <tt class="descname">TUL_rmdir</tt><big>(</big>const char*<em>&nbsp;path</em><big>)</big><a class="headerlink" href="#TUL_rmdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the directory at the given path.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The function will fail if the directory at <em>path</em> is not empty. To remove a directory and all its contents, you must currently do a manual traversal.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_path_join">
+char* <tt class="descname">TUL_path_join</tt><big>(</big>const char*<em>&nbsp;first</em>, const char*<em>&nbsp;second</em><big>)</big><a class="headerlink" href="#TUL_path_join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate two paths into one cleanly. This is useful when you have paths that may start/end with a separator, for example <em>a/</em> and <em>/b</em>. With regular string concatenation, that would result in <em>a//b</em>, whereas with path_join, you&#8217;ll get <em>a/b</em>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The returned string is heap allocated and must be manually deallocated, see <a class="reference internal" href="memory_management.html#string-allocation"><em>String Allocation</em></a>.</p>
+</div>
+</dd></dl>
+
+<div class="section" id="iterdir-directory-traversal">
+<h2>iterdir: Directory Traversal<a class="headerlink" href="#iterdir-directory-traversal" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes it is necessary to traverse all the files in a given directory. This can be done with the <em>iterdir</em> set of functions. Use <a class="reference internal" href="#TUL_iterdir_create" title="TUL_iterdir_create"><tt class="xref c c-func docutils literal"><span class="pre">TUL_iterdir_create()</span></tt></a> to obtain an iterator over a specific directory, then traverse its contents with <a class="reference internal" href="#TUL_iterdir_next" title="TUL_iterdir_next"><tt class="xref c c-func docutils literal"><span class="pre">TUL_iterdir_next()</span></tt></a> and finally clean up with <a class="reference internal" href="#TUL_iterdir_destroy" title="TUL_iterdir_destroy"><tt class="xref c c-func docutils literal"><span class="pre">TUL_iterdir_destroy()</span></tt></a>.</p>
+<p>See also <a class="reference internal" href="memory_management.html#opaque-objects"><em>Opaque Objects</em></a>.</p>
+<dl class="function">
+<dt id="TUL_iterdir_create">
+void* <tt class="descname">TUL_iterdir_create</tt><big>(</big>const char*<em>&nbsp;path</em><big>)</big><a class="headerlink" href="#TUL_iterdir_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an iterator for the contents of a directory, or <tt class="docutils literal"><span class="pre">NULL</span></tt> on error. Returns an opaque object that can be passed to other <em>iterdir</em> functions.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The returned object is heap-allocated and must be deallocated manually with <a class="reference internal" href="#TUL_iterdir_destroy" title="TUL_iterdir_destroy"><tt class="xref c c-func docutils literal"><span class="pre">TUL_iterdir_destroy()</span></tt></a>.</p>
+</div>
+<p>This iterator will traverse over the direct children of this directory, but not over the children of sub-directories.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_iterdir_next">
+char* <tt class="descname">TUL_iterdir_next</tt><big>(</big>void*<em>&nbsp;iter</em><big>)</big><a class="headerlink" href="#TUL_iterdir_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the next file path in the directory, or <tt class="docutils literal"><span class="pre">NULL</span></tt> if there&#8217;s none. The returned path will be relative to the traversed directory.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The returned string is heap allocated and must be manually deallocated, see <a class="reference internal" href="memory_management.html#string-allocation"><em>String Allocation</em></a>.</p>
+</div>
+<p>This function can be called on a <tt class="docutils literal"><span class="pre">NULL</span></tt>-iter, so you can attempt to traverse a non-existent or locked directory, and it&#8217;ll simply be treated as empty.</p>
+<p>Example code:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">void</span><span class="o">*</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">TUL_iterdir_create</span><span class="p">(</span><span class="s">&quot;foobar&quot;</span><span class="p">);</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">;</span>
+<span class="k">while</span><span class="p">((</span><span class="n">path</span> <span class="o">=</span> <span class="n">TUL_iterdir_next</span><span class="p">(</span><span class="n">iter</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Content: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">TUL_iterdir_destroy</span><span class="p">(</span><span class="n">iter</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_iterdir_destroy">
+void <tt class="descname">TUL_iterdir_destroy</tt><big>(</big>void*<em>&nbsp;iter</em><big>)</big><a class="headerlink" href="#TUL_iterdir_destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroys the iterator, this must be called to avoid a memory leak.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Filesystem Library</a><ul>
+<li><a class="reference internal" href="#iterdir-directory-traversal">iterdir: Directory Traversal</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="time.html"
+                        title="previous chapter">Time</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="thread.html"
+                        title="next chapter">Threading</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/filesystem.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="thread.html" title="Threading"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="time.html" title="Time"
+             >previous</a> |</li>
+        <li><a href="index.html">TUL 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, cib.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

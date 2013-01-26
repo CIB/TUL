@@ -1,0 +1,227 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Memory Management &mdash; TUL 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TUL 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="String Utils" href="string_utils.html" />
+    <link rel="prev" title="Error Handling" href="error.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="string_utils.html" title="String Utils"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="error.html" title="Error Handling"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TUL 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="memory-management">
+<h1>Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h1>
+<p>Abstraction layer for the methods through which LWCL handles memory. You are encouraged to change functions in <em>memory_management.h</em> directly, in order to employ your project&#8217;s individual memory management strategy.</p>
+<p>There are only two distinct datatypes that LWCL will ever allocate itself and return to you.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="5%" />
+<col width="30%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Datatype</th>
+<th class="head">C-Type</th>
+<th class="head">Allocate With</th>
+<th class="head">Deallocate With</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>String</td>
+<td>char*</td>
+<td><a class="reference internal" href="#TUL_stringAlloc" title="TUL_stringAlloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_stringAlloc()</span></tt></a></td>
+<td><a class="reference internal" href="#TUL_stringDealloc" title="TUL_stringDealloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_stringDealloc()</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td>Opaque Object</td>
+<td>void*</td>
+<td>Type-specific handler(<tt class="docutils literal"><span class="pre">TUL_*_create</span></tt>)</td>
+<td>Type-specific handler(<tt class="docutils literal"><span class="pre">TUL_*_destroy</span></tt>)</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="string-allocation">
+<span id="id1"></span><h2>String Allocation<a class="headerlink" href="#string-allocation" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes it&#8217;s necessary for LWCL to return newly created strings to the caller. These are allocated with <a class="reference internal" href="#TUL_stringAlloc" title="TUL_stringAlloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_stringAlloc()</span></tt></a>, which by default uses standard system <tt class="docutils literal"><span class="pre">malloc</span></tt>. This means that strings returned by LWCL functions must be manually deallocated with <a class="reference internal" href="#TUL_stringDealloc" title="TUL_stringDealloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_stringDealloc()</span></tt></a>, or otherwise memory leaks will occur.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can expect any LWCL function that returns <tt class="docutils literal"><span class="pre">char*</span></tt> to return strings allocated with <a class="reference internal" href="#TUL_stringAlloc" title="TUL_stringAlloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_stringAlloc()</span></tt></a>, unless explicitly stated otherwise.</p>
+</div>
+<p>Consider the following code</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">printCWD</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">cwd</span> <span class="o">=</span> <span class="n">TUL_getcwd</span><span class="p">();</span>
+        <span class="n">printf</span><span class="p">(</span><span class="n">cwd</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>As you can see, a newly allocated string is retrieved with the call to <tt class="docutils literal"><span class="pre">TUL_getcwd()</span></tt>. However, a memory leak is caused, because the reference to the string is discarded without removing the string itself, making it impossible to deallocate it. In order to implement this function properly, the string reference has to be discarded before the function exits!</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">printCWD</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">cwd</span> <span class="o">=</span> <span class="n">TUL_getcwd</span><span class="p">();</span>
+        <span class="n">printf</span><span class="p">(</span><span class="n">cwd</span><span class="p">);</span>
+        <span class="n">TUL_stringDealloc</span><span class="p">(</span><span class="n">cwd</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This may seem like a hassle, but it is quite a natural way to treat strings in C. If your language has a garbage collector or reference counting, you can easily copy or wrap the string into such a mechanism.</p>
+</div>
+<div class="section" id="opaque-objects">
+<span id="id2"></span><h2>Opaque Objects<a class="headerlink" href="#opaque-objects" title="Permalink to this headline">¶</a></h2>
+<p>Since LWCL does not expose any struct objects directly in its API, <em>custom objects</em> are represented to the user as a mere pointer(<tt class="docutils literal"><span class="pre">void*</span></tt>). These will internally be allocated and deallocated with <a class="reference internal" href="#TUL_objectAlloc" title="TUL_objectAlloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_objectAlloc()</span></tt></a> and <a class="reference internal" href="#TUL_objectDealloc" title="TUL_objectDealloc"><tt class="xref c c-func docutils literal"><span class="pre">TUL_objectDealloc()</span></tt></a>, but a user should <strong>not</strong> call these functions directly outside a LWCL library. Instead, objects should be created and destroyed with the <tt class="docutils literal"><span class="pre">TUL_*_create</span></tt> and <tt class="docutils literal"><span class="pre">TUL_*_destroy</span></tt> set of functions.</p>
+<p>Opaque objects are not type-safe; they do not store a reference to their own type. The user is responsible for this. LWCL functions that take an opaque object should never be called with the wrong type of opaque object.</p>
+</div>
+<div class="section" id="memory-management-functions">
+<h2>Memory Management Functions<a class="headerlink" href="#memory-management-functions" title="Permalink to this headline">¶</a></h2>
+<p>The following set of functions is just a wrapper around the standard malloc family. It&#8217;s here so that a user can choose to replace system malloc with something else.</p>
+<dl class="function">
+<dt id="TUL_malloc">
+void* <tt class="descname">TUL_malloc</tt><big>(</big>size_t<em>&nbsp;size</em><big>)</big><a class="headerlink" href="#TUL_malloc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="TUL_realloc">
+void* <tt class="descname">TUL_realloc</tt><big>(</big>void*<em>&nbsp;ptr</em>, size_t<em>&nbsp;size</em><big>)</big><a class="headerlink" href="#TUL_realloc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="TUL_free">
+void <tt class="descname">TUL_free</tt><big>(</big>void*<em>&nbsp;ptr</em><big>)</big><a class="headerlink" href="#TUL_free" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>These functions are used for object and string allocation. They may be changed in order to better fit the memory management model of a user.</p>
+<dl class="function">
+<dt id="TUL_objectAlloc">
+void* <tt class="descname">TUL_objectAlloc</tt><big>(</big>size_t<em>&nbsp;size</em><big>)</big><a class="headerlink" href="#TUL_objectAlloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate an opaque object with the given <em>size</em> and return a pointer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_objectDealloc">
+void <tt class="descname">TUL_objectDealloc</tt><big>(</big>void*<em>&nbsp;object</em><big>)</big><a class="headerlink" href="#TUL_objectDealloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate the opaque <em>object</em>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_stringAlloc">
+char* <tt class="descname">TUL_stringAlloc</tt><big>(</big>size_t<em>&nbsp;size</em><big>)</big><a class="headerlink" href="#TUL_stringAlloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate a 0-terminated string with the given <em>size</em> in memory.</p>
+<p>The size must include the terminating 0, so <em>size</em> must be strlen(string) + 1</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="TUL_stringDealloc">
+char* <tt class="descname">TUL_stringDealloc</tt><big>(</big>char*<em>&nbsp;string</em><big>)</big><a class="headerlink" href="#TUL_stringDealloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate the 0-terminated <em>string</em>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Memory Management</a><ul>
+<li><a class="reference internal" href="#string-allocation">String Allocation</a></li>
+<li><a class="reference internal" href="#opaque-objects">Opaque Objects</a></li>
+<li><a class="reference internal" href="#memory-management-functions">Memory Management Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="error.html"
+                        title="previous chapter">Error Handling</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="string_utils.html"
+                        title="next chapter">String Utils</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/memory_management.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="string_utils.html" title="String Utils"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="error.html" title="Error Handling"
+             >previous</a> |</li>
+        <li><a href="index.html">TUL 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, cib.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

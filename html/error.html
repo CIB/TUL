@@ -1,0 +1,141 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Error Handling &mdash; TUL 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TUL 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="Memory Management" href="memory_management.html" />
+    <link rel="prev" title="TUL - Tiny Universal Library" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="memory_management.html" title="Memory Management"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="TUL - Tiny Universal Library"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TUL 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="error-handling">
+<h1>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h1>
+<p>Basic error handling functionality. A LWCL library will set the current error with <tt class="xref c c-func docutils literal"><span class="pre">lwcl_seterror()</span></tt>, and the user can retrieve it with <a class="reference internal" href="#lwcl_getError" title="lwcl_getError"><tt class="xref c c-func docutils literal"><span class="pre">lwcl_getError()</span></tt></a>.</p>
+<dl class="member">
+<dt id="LWCL_MAX_ERROR_SIZE">
+#define <tt class="descname">LWCL_MAX_ERROR_SIZE</tt><a class="headerlink" href="#LWCL_MAX_ERROR_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A macro defining the maximum size in bytes for error messages. Should be an integer value large enough to hold any potential error being raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lwcl_getError">
+const char* <tt class="descname">lwcl_getError</tt><big>(</big><big>)</big><a class="headerlink" href="#lwcl_getError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the last error raised, or <tt class="docutils literal"><span class="pre">NULL</span></tt> if the error is cleared.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The string returned by this function is a reference to internal memory. It need not be manually deallocated, but the reference becomes invalid on the next call to a <tt class="docutils literal"><span class="pre">TUL_*</span></tt> function.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="lwcl_setError">
+void <tt class="descname">lwcl_setError</tt><big>(</big>const char*<em>&nbsp;error</em><big>)</big><a class="headerlink" href="#lwcl_setError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the last error raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lwcl_clearError">
+void <tt class="descname">lwcl_clearError</tt><big>(</big><big>)</big><a class="headerlink" href="#lwcl_clearError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the last error raised. Any subsequent call to <tt class="xref c c-func docutils literal"><span class="pre">lwcl_geterror()</span></tt> will return <tt class="docutils literal"><span class="pre">NULL</span></tt>.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">TUL - Tiny Universal Library</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="memory_management.html"
+                        title="next chapter">Memory Management</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/error.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="memory_management.html" title="Memory Management"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="TUL - Tiny Universal Library"
+             >previous</a> |</li>
+        <li><a href="index.html">TUL 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, cib.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
