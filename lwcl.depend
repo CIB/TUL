@@ -1,0 +1,59 @@
+# depslib dependency file v1.0
+1359341262 source:c:\projects\tul\src\error.c
+	"TUL_error.h"
+	<stdlib.h>
+	<string.h>
+	"SDL_error.h"
+
+1359159789 c:\projects\tul\src\tul_error.h
+
+1359159789 source:c:\projects\tul\src\filesystem.c
+	"TUL_filesystem.h"
+	"TUL_error.h"
+	"TUL_memory_management.h"
+	"TUL_string.h"
+	<direct.h>
+	<windows.h>
+	<io.h>
+	<stdio.h>
+	<sys/locking.h>
+	<sys/utime.h>
+	<fcntl.h>
+	<unistd.h>
+	<dirent.h>
+	<fcntl.h>
+	<sys/types.h>
+	<utime.h>
+
+1359159789 c:\projects\tul\src\tul_filesystem.h
+
+1359159789 c:\projects\tul\src\tul_memory_management.h
+	<string.h>
+	<stdlib.h>
+
+1359159789 c:\projects\tul\src\tul_string.h
+	<string.h>
+
+1359159789 source:c:\projects\tul\src\memory_management.c
+
+1359159789 source:c:\projects\tul\src\string_utils.c
+	"TUL_string.h"
+	"TUL_memory_management.h"
+	<stdlib.h>
+	<string.h>
+
+1359159789 source:c:\projects\tul\src\thread.c
+	"TUL_thread.h"
+	"SDL_thread.h"
+
+1359340575 c:\projects\tul\src\tul_thread.h
+
+1359159789 source:c:\projects\tul\src\time.c
+	"TUL_time.h"
+	"TUL_error.h"
+	<windows.h>
+	<time.h>
+
+1359159789 c:\projects\tul\src\tul_time.h
+	<time.h>
+

@@ -1,5 +1,7 @@
 /** Simply wrap the SDL functions up. **/
 
+// Threading support can easily be disabled with a #define
+#ifdef TUL_THREADING
 #include "TUL_thread.h"
 #include "SDL_thread.h"
 
@@ -24,3 +26,5 @@ int TUL_letThreadFinish(TUL_Thread* thread) {
     SDL_WaitThread((SDL_Thread*) thread, &rval);
     return rval;
 }
+
+#endif // TUL_THREADING

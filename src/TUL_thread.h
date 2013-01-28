@@ -1,3 +1,7 @@
+#ifndef TUL_THREADING
+    #error "Threading is disabled. Recompile with #define TUL_THREADING to enable it."
+#endif
+
 /** This module is responsible for managing threads, and threading-related concepts such as mutexes.
     It is currently just a thin wrapper around the SDL thread utils.
 */
