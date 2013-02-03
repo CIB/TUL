@@ -1,3 +1,9 @@
+## This makefile uses the binutils toolchain and unix-style tools.
+## It should thus work on linux-like toolchains(linux, MinGW, cygwin).
+
+## The makefile will produce a libtul.a which is a static library version
+## of TUL.
+
 # C compiler
 CC = gcc
 
