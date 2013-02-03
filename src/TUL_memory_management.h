@@ -37,10 +37,10 @@ static inline void TUL_objectDealloc(void* object) {
 	the trailing \0.
 **/
 static inline char* TUL_stringAlloc(size_t size) {
-	return TUL_malloc(size);
+	return (char*) TUL_malloc(size);
 }
 
 /** Deallocate a \0-terminated string. **/
-static inline void TUL_stringDealloc(char* string) {
-	return TUL_free(string);
+static inline void TUL_stringDealloc(const char* string) {
+	return TUL_free((void*) string);
 }
