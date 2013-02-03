@@ -18,7 +18,7 @@ LDFLAGS ?= -static
 
 CPPDEPS = -MT$@ -MF`echo $@ | sed -e 's,\.o$$,.d,'` -MD -MP
 MINIMAL_CFLAGS =  -I.  $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS = error.o filesystem.o time.o
+MINIMAL_OBJECTS = error.o filesystem.o time.o array.o
 
 ### Conditionally set variables: ###
 
@@ -46,6 +46,9 @@ filesystem.o: ./src/filesystem.c
 	$(CC) -c -o $@ $(MINIMAL_CFLAGS) $(CPPDEPS) $<
 
 time.o: ./src/time.c
+	$(CC) -c -o $@ $(MINIMAL_CFLAGS) $(CPPDEPS) $<
+	
+array.o: ./src/array.c
 	$(CC) -c -o $@ $(MINIMAL_CFLAGS) $(CPPDEPS) $<
 
 
