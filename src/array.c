@@ -9,6 +9,8 @@ typedef struct {
 void* TUL_array_create(int elements) {
 	_array* rval = (_array*) TUL_objectAlloc(sizeof(_array) + sizeof(void*) * elements);
 	rval->size = elements;
+	memset(&rval->elements, 0, sizeof(void*) * elements);
+	return rval;
 }
 
 void TUL_array_destroy(void* array) {

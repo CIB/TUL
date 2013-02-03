@@ -7,7 +7,7 @@
 // ------------------
 
 const char* TUL_strcopy(const char* source) {
-	size_t length = strlen(source) + 1;
+	size_t length = strlen(source);
 
 	// +1 because strlen doesn't count the trailing \0
 	char* rval = (char*) TUL_stringAlloc(length + 1);

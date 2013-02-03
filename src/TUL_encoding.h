@@ -37,11 +37,6 @@ void TUL_encoding_copy(const char* encoding);
 /** Destroys a single codepage, deallocating it. **/
 void TUL_encoding_destroy(const char* encoding);
 
-/** Checks whether two encodings are the same(due to codepages
-    being opaque objects, i.e. pointers, using == is not sufficient.)
-**/
-int TUL_encoding_equals(const char* one, const char* other);
-
 /** Returns the name of an encoding. Note that these, too, are
     not standardized among systems.
 **/

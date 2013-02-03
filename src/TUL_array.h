@@ -29,6 +29,9 @@ int TUL_array_get_size(void* array);
 	
 	Returns NULL and sets the error to "Array index out of bounds",
 	if the position is out-of-bounds.
+	
+	If the element at the specified position hasn't been set yet,
+	returns NULL.
  **/
 void* TUL_array_get(void* array, int position);
 

@@ -33,6 +33,13 @@ static inline void TUL_objectDealloc(void* object) {
 	TUL_free(object);
 }
 
+/** Reallocate an opaque object, changing its size.
+    The most notable use case of this are resizable arrays.
+**/
+static inline void* TUL_objectRealloc(void* object, int size) {
+	return TUL_realloc(object, size);
+}
+
 /** Allocate a \0-terminated string, size must include space for
 	the trailing \0.
 **/
