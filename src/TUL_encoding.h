@@ -31,14 +31,11 @@ const char* TUL_encoding_get_system_codepages();
 **/
 void TUL_encoding_array_destroy(void* array);
 
-/** Copies a codepage. **/
-void TUL_encoding_copy(const char* encoding);
-
-/** Destroys a single codepage, deallocating it. **/
-void TUL_encoding_destroy(const char* encoding);
-
 /** Returns the name of an encoding. Note that these, too, are
     not standardized among systems.
+	
+	Returns NULL if encoding has no associated name. Note that
+	this tends to happen often and thus needs to be handled.
 **/
 const char* TUL_encoding_get_name(const char* encoding);
 

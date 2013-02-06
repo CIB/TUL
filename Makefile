@@ -8,7 +8,7 @@
 CC = gcc
 
 # Standard flags for C++ 
-CFLAGS ?= -g
+CFLAGS ?= -g -ggdb
 
 # Standard preprocessor flags (common for CC and CXX) 
 CPPFLAGS ?= 
