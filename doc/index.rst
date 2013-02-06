@@ -17,6 +17,7 @@ Contents:
    time
    filesystem
    thread
+   encoding
 
 
 
