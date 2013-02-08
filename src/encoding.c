@@ -29,6 +29,12 @@ const char* TUL_encoding_get_system_codepage() {
 const char* TUL_encoding_get_name(const char* encoding) {
 	int encodingID = atoi(encoding);
 	
+	// A few exceptions for important codepages that apparently
+	// windows has no name for.
+	if(encodingID == 1200) {
+		return TUL_strcopy("1200 (UTF-16)");
+	}
+	
 	CPINFOEX info;
 	
 	BOOL result = GetCPInfoEx(encodingID, 0, &info);
@@ -74,11 +80,11 @@ void TUL_encoding_array_destroy(void* array) {
 }
 
 const char* TUL_encoding_get_utf8() {
-	return "utf-8";
+	return "65001";
 }
 
 const char* TUL_encoding_get_utf16() {
-	return "utf-16";
+	return "1200";
 }
 
 void* TUL_encoding_convert(void* string, const char* source_encoding, const char* to_encoding) {

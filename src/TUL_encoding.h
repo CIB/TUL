@@ -15,9 +15,6 @@ const char* TUL_encoding_get_utf8();
 /** Returns the encoding representing UTF16. **/
 const char* TUL_encoding_get_utf16();
 
-/** Returns the encoding representing UTF32. **/
-const char* TUL_encoding_get_utf32();
-
 /** Returns a TUL_array of encodings installed on the system. **/
 const char* TUL_encoding_get_system_codepages();
 
